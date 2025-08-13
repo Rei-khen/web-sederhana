@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f8f9fa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 300px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      input {
+        width: 100%;
+        padding: 0.7rem;
+        margin: 0.5rem 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        width: 100%;
+        padding: 0.7rem;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #1e7e34;
+      }
+      .link {
+        text-align: center;
+        margin-top: 1rem;
+      }
+      .link a {
+        color: #28a745;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Register</h2>
+      <form id="registerForm">
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          required
+          id="nama"
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          required
+          id="akun"
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          id="password"
+          required
+        />
+        <button type="submit">Daftar</button>
+      </form>
+      <div class="link">
+        <p>Sudah punya akun? <a href="login.html">Login</a></p>
+      </div>
+    </div>
+
+    <script>
+      const nama = document.getElementById("nama");
+      const akun = document.getElementById("akun");
+      const password = document.getElementById("password");
+      const registerForm = document.getElementById("registerForm");
+
+      registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          const sendData = await fetch("http://localhost:3000/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              nama: nama.value,
+              akun: akun.value,
+              password: password.value,
+            }),
+          });
+
+          if (sendData.ok) {
+            const result = await sendData.json();
+            console.log("berhasil mengirim data: ", result);
+
+            //bersihkan isi from
+            nama.value = "";
+            akun.value = "";
+            password.value = "";
+
+            alert("data berhasil dikirim silahkan login");
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    </script>
+  </body>
+</html>
