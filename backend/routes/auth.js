@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
 const dbQuery = require("../models/dbQuery");
 
 //register
@@ -32,6 +33,47 @@ router.get("/user", async (req, res) => {
   } catch (err) {
     res.status(400).json({
       message: "gagal menemukan user",
+      error: err,
+    });
+  }
+});
+
+//login
+router.post("/login", async (req, res) => {
+  const { akun, password } = req.body;
+
+  try {
+    const user = await dbQuery.findeUserByAkun(akun);
+
+    if (!user || user.password !== password) {
+      res.status(400).json({
+        message: "sandi salah atau user tidak ada",
+      });
+    }
+
+    //buat jwt token
+    const token = jwt.sign(
+      {
+        id: user.id,
+        nama: user.nama,
+        akun: user.akun,
+      },
+      "ini rahasia",
+      { expiresIn: "2d" }
+    );
+
+    res.status(200).json({
+      message: "login berhasil",
+      token,
+      user: {
+        id: user.id,
+        nama: user.nama,
+        akun: user.akun,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      message: "gagal untuk login",
       error: err,
     });
   }

@@ -56,12 +56,13 @@
   <body>
     <div class="container">
       <h2>Login</h2>
-      <form action="/login" method="POST">
-        <input type="text" name="username" placeholder="Username" required />
+      <form id="loginForm">
+        <input type="text" name="akun" placeholder="akun" id="akun" required />
         <input
           type="password"
           name="password"
           placeholder="Password"
+          id="password"
           required
         />
         <button type="submit">Masuk</button>
@@ -70,5 +71,37 @@
         <p>Belum punya akun? <a href="register.html">Daftar</a></p>
       </div>
     </div>
+
+    <script>
+      const akun = document.getElementById("akun");
+      const password = document.getElementById("password");
+
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          try {
+            const result = await fetch("http://localhost:3000/auth/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                akun: akun.value,
+                password: password.value,
+              }),
+            });
+
+            const data = await result.json();
+            console.log(data);
+
+            if (result.ok) {
+              alert("login berhasil");
+              akun.value = "";
+              password.value = "";
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        });
+    </script>
   </body>
 </html>
