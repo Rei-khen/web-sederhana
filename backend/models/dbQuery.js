@@ -1,5 +1,6 @@
 const db = require("../configs/database");
 
+//menambahkan users ke database
 module.exports.insertUser = async (nama, akun, password) => {
   try {
     const result = await db.query(
@@ -14,12 +15,17 @@ module.exports.insertUser = async (nama, akun, password) => {
   }
 };
 
+//mencari users berdasarkan email
 module.exports.findeUserByAkun = async (akun) => {
   try {
     const [result] = await db.query("select * from users where akun=?", [akun]);
-    return result;
+    return result[0];
   } catch (err) {
     console.log("gagal mencari dengan akun");
     throw err;
   }
 };
+
+//untuk menghapus user
+
+//untuk mengupdate user
